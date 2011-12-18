@@ -220,7 +220,7 @@ void Level::checkForCollisions()
 
     foreach (Plane face, faces)
     {
-        if(qAbs(ball->getCenter().distanceToPlane(face.point, face.normal)) <= BALL_R+0.01)
+        if(qAbs(ball->getCenter().distanceToPlane(face.point, face.normal)) <= BALL_R+0.005)
         {
             ball->collisionFrom(face.normal);
         }
@@ -456,8 +456,8 @@ void GLWidget:: mousePressEvent(QMouseEvent *e)
     mPressPos.setY(mPressPos.y()-478);
     if (mPressPos.length() < 65)
     {
-        rotxAngle = -mPressPos.y()/10;
-        rotyAngle = -mPressPos.x()/10;
+        rotxAngle = floor(-mPressPos.y()/20);
+        rotyAngle = floor(-mPressPos.x()/20);
         emit inclineChanged(rotxAngle, rotyAngle);
     }
 }
@@ -469,15 +469,17 @@ void GLWidget::mouseMoveEvent(QMouseEvent *e)
     mCurrPos.setY(mCurrPos.y()-478);
     if (mCurrPos.length() < 65)
     {
-        rotxAngle = -mCurrPos.y()/15;
-        rotyAngle = -mCurrPos.x()/15;
+        rotxAngle = floor(-mCurrPos.y()/20);
+        rotyAngle = floor(-mCurrPos.x()/20);
         emit inclineChanged(rotxAngle, rotyAngle);
     }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-
+    rotxAngle = 0;
+    rotyAngle = 0;
+    emit inclineChanged(rotxAngle, rotyAngle);
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *e)

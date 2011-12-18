@@ -44,7 +44,7 @@ void Ball::calcVelocity()
     foreach(QVector3D normal, normals)
     {
         velocity -= QVector3D::dotProduct(velocity, normal)*(normal);
-        center += normal*0.01;
+        center += normal*0.05;
     }
     velocity *= FRICTION;
 }

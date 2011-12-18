@@ -10,6 +10,7 @@ Widget::Widget(QWidget *parent) :
     lyt.addWidget(glWidget, 0,0, 2, 2, Qt::AlignLeft);
     lyt.addWidget(&lbl, 0, 5, 1, 1, Qt::AlignRight);
     this->setGeometry(40, 40, 800, 600);
+    this->setFixedSize(800,600);
     this->setLayout(&lyt);
 
     connect(glWidget, SIGNAL(inclineChanged(double,double)), this, SLOT(inclineChanged(double,double)));
