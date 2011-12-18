@@ -44,6 +44,7 @@ Level::Level (int diff,  QObject *parent):QObject(parent),
     difficulty(diff),
     isActive(true),
     startPoint(QPoint(1,1)),
+    endPoint(NULL),
     transparency(0.0),
     zPos(0.0)
 {
@@ -54,11 +55,12 @@ Level::Level (int diff,  QObject *parent):QObject(parent),
 Level::Level (int diff, QPoint _startPt, QObject * parent): QObject(parent),
     difficulty(diff),
     isActive(false),
+    startPoint(_startPt),
+    endPoint(NULL),
     transparency(0.5),
     zPos(-2*SIDE_LENGTH),
     ball(NULL)
 {
-    startPoint = _startPt;
     generateMap(diff);
     qDebug()<<startPoint;
     qDebug()<<"Constructor of "<<this<<" finished successfuly";
@@ -151,10 +153,10 @@ void Level::draw()
                     glTranslatef(-PLANE_HS+HS+x*2*HS, -PLANE_HS+HS+y*2*HS, 0);
 
                     glBegin(GL_QUADS);
-                    glVertex3f(-HS,-HS,0.01);
-                    glVertex3f(HS,-HS,0.01);
-                    glVertex3f(HS,HS,0.01);
-                    glVertex3f(-HS,HS,0.01);
+                    glVertex3f(-HS,-HS,zPos+0.5);
+                    glVertex3f(HS,-HS,zPos+0.5);
+                    glVertex3f(HS,HS,zPos+0.5);
+                    glVertex3f(-HS,HS,zPos+0.5);
                     glEnd();
                     glPopMatrix();
                     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_wall);
@@ -176,7 +178,6 @@ void Level::inclineChanged(double ix, double iy)
 
 void Level::update()
 {
-    qDebug()<<"updating "<<this;
     if(zPos < 0 && isActive)
     {
         zPos += 1.0;
@@ -193,7 +194,6 @@ void Level::update()
             getDestroyed();
         }
     }
-    qDebug()<<"update successful";
 }
 
 struct Plane
@@ -233,28 +233,23 @@ void Level::checkForCollisions()
 
 bool Level::isEnd()
 {
-    qDebug()<<"checking for end";
     int x = floor((ball->getCenter().x()+PLANE_HS)/(2*HS));
     int y = floor((ball->getCenter().y()+PLANE_HS)/(2*HS));
 
     if(endPoint != NULL)
         if(x == endPoint->x() && y == endPoint->y())
         {
-            qDebug()<<"check successful";
             return true;
         }
         else
         {
-            qDebug()<<"check successful";
             return false;
         }
-    else qDebug()<<"end pt is NULL";
 }
 
 QPoint Level::getEndPt()const
 {
     QPoint pt = *endPoint;
-    qDebug()<<"getEndPt:"<<pt;
     return pt;
 }
 
@@ -337,11 +332,7 @@ void Level::getStarted()
 
 void Level::getDestroyed()
 {
-    delete ball;
-    ball = NULL;
     emit over(getEndPt());
-    delete endPoint;
-    endPoint = NULL;
 }
 
 GLWidget :: GLWidget (QWidget *parent):
@@ -409,23 +400,31 @@ void GLWidget :: initializeGL()
 
 void GLWidget:: paintGL()
 {
-    qDebug()<<"painting";
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
+
+    glPushMatrix();
+    glTranslatef(0.5,-0.5, -1);
+
+    glBegin(GL_POINTS);
+    glVertex3d(0,0,0);
+    glEnd();
+
+    GLUquadric *gluq;
+    gluq = gluNewQuadric();
+    gluQuadricDrawStyle(gluq, GLU_FILL);
+    gluDisk(gluq, (float)90/HEIGHT, (float)92/HEIGHT, 50, 1);
+    glPopMatrix();
+
     glPushMatrix();
     QVector3D cam = QVector3D(1.7*PLANE_HS,1.7*PLANE_HS,3*PLANE_HS);
     QVector3D up =  QVector3D::normal(cam, QVector3D(-cam.x(),cam.y(),0));
     gluLookAt(cam.x(),cam.y(),cam.z() ,0,0,0, up.x(), up.y(), up.z());
     glRotatef(rotxAngle, 1,0,0);
     glRotatef(rotyAngle, 0,1,0);
-    qDebug()<<"-drawing"<<currentLevel;
     currentLevel->draw();
-    qDebug()<<"-successful";
-    qDebug()<<"-drawing"<<nextLevel;
     nextLevel->draw();
-    qDebug()<<"successful";
     glPopMatrix();
-    qDebug()<<"successful";
 }
 
 
@@ -452,19 +451,28 @@ void GLWidget::switchLevel(QPoint initial)
 
 void GLWidget:: mousePressEvent(QMouseEvent *e)
 {
-    mousePressPosition = QVector3D(e->posF().x(), 0, HEIGHT/2).normalized();
+    mPressPos= QVector2D(e->pos().x(), e->pos().y());
+    mPressPos.setX(mPressPos.x()-480);
+    mPressPos.setY(mPressPos.y()-478);
+    if (mPressPos.length() < 65)
+    {
+        rotxAngle = -mPressPos.y()/10;
+        rotyAngle = -mPressPos.x()/10;
+        emit inclineChanged(rotxAngle, rotyAngle);
+    }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    mouseReleasePosition = QVector3D(e->posF().x(), 0, HEIGHT/2).normalized();
-    qreal angle = 57.9*acos(QVector3D::dotProduct(mousePressPosition, mouseReleasePosition)-0.0001);  // вычитаем 0.0001 чтобы поправить ошибки вблизи нулевого угла
-    if(mousePressPosition.x()<mouseReleasePosition.x())
-        camRotzAngle += angle;
-    else
-        camRotzAngle -= angle;
-    normalizeAngle(&camRotzAngle);
-    mousePressPosition = mouseReleasePosition;
+    mCurrPos= QVector2D(e->pos().x(), e->pos().y());
+    mCurrPos.setX(mCurrPos.x()-480);
+    mCurrPos.setY(mCurrPos.y()-478);
+    if (mCurrPos.length() < 65)
+    {
+        rotxAngle = -mCurrPos.y()/15;
+        rotyAngle = -mCurrPos.x()/15;
+        emit inclineChanged(rotxAngle, rotyAngle);
+    }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *e)

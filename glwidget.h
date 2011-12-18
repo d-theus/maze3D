@@ -47,7 +47,7 @@ class GLWidget : public QGLWidget
 {
     Q_OBJECT
     GLdouble rotxAngle, rotyAngle,camRotzAngle;
-    QVector3D mousePressPosition, mouseReleasePosition;
+    QVector2D mPressPos, mCurrPos;
     QTimer *timer;
     Level  *currentLevel, *nextLevel;
     GLfloat **colors;
