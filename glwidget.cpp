@@ -191,7 +191,7 @@ void Level::update()
         ball->updateCalculations();
         if(isEnd())
         {
-            getDestroyed();
+            emit over();
         }
     }
 }
@@ -332,7 +332,11 @@ void Level::getStarted()
 
 void Level::getDestroyed()
 {
-    emit over(getEndPt());
+    delete ball;
+    ball = NULL;
+    delete endPoint;
+    endPoint = NULL;
+    delete this;
 }
 
 GLWidget :: GLWidget (QWidget *parent):
@@ -428,24 +432,27 @@ void GLWidget:: paintGL()
 }
 
 
-void GLWidget::switchLevel(QPoint initial)
+void GLWidget::switchLevel()
 {
+    qDebug()<<"switching levels";
     timer->stop();
 
     disconnect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     disconnect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
     disconnect(currentLevel, SIGNAL(over(QPoint)), this, SLOT(switchLevel(QPoint)));
 
-    delete currentLevel;
+    currentLevel->getDestroyed();
     currentLevel = nextLevel;
     currentLevel->getStarted();
 
-    nextLevel = new Level(29, initial);
+    nextLevel = new Level(29, currentLevel->getEndPt());
+    qDebug()<<"created";
 
     connect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     connect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
     connect(currentLevel, SIGNAL(over(QPoint)), this, SLOT(switchLevel(QPoint)));
 
+    qDebug()<<"switched";
     timer->start();
 }
 
@@ -507,6 +514,6 @@ void GLWidget::keyPressEvent(QKeyEvent *e)
         emit inclineChanged(rotxAngle, rotyAngle);
         break;
     case(Qt::Key_End):
-        switchLevel(currentLevel->getEndPt());
+        switchLevel();
     }
 }

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'glwidget.h'
 **
-** Created: Sun 18. Dec 15:30:48 2011
+** Created: Sun 18. Dec 22:41:02 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,23 +32,23 @@ static const uint qt_meta_data_Level[] = {
 
  // signals: signature, parameters, type, tag, flags
       14,    7,    6,    6, 0x05,
-      41,   35,    6,    6, 0x05,
+      35,    6,    6,    6, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      60,   54,    6,    6, 0x0a,
-      90,    6,    6,    6, 0x0a,
-      99,    6,    6,    6, 0x0a,
-     112,    6,    6,    6, 0x0a,
-     127,    6,    6,    6, 0x0a,
+      48,   42,    6,    6, 0x0a,
+      78,    6,    6,    6, 0x0a,
+      87,    6,    6,    6, 0x0a,
+     100,    6,    6,    6, 0x0a,
+     115,    6,    6,    6, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Level[] = {
     "Level\0\0normal\0collision(QVector3D)\0"
-    "endPt\0over(QPoint)\0ix,iy\0"
-    "inclineChanged(double,double)\0update()\0"
-    "getStarted()\0getDestroyed()\0createBall()\0"
+    "over()\0ix,iy\0inclineChanged(double,double)\0"
+    "update()\0getStarted()\0getDestroyed()\0"
+    "createBall()\0"
 };
 
 const QMetaObject Level::staticMetaObject = {
@@ -81,7 +81,7 @@ int Level::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: collision((*reinterpret_cast< QVector3D(*)>(_a[1]))); break;
-        case 1: over((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
+        case 1: over(); break;
         case 2: inclineChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
         case 3: update(); break;
         case 4: getStarted(); break;
@@ -102,10 +102,9 @@ void Level::collision(QVector3D _t1)
 }
 
 // SIGNAL 1
-void Level::over(QPoint _t1)
+void Level::over()
 {
-    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 1, _a);
+    QMetaObject::activate(this, &staticMetaObject, 1, 0);
 }
 static const uint qt_meta_data_GLWidget[] = {
 
@@ -124,14 +123,14 @@ static const uint qt_meta_data_GLWidget[] = {
       16,   10,    9,    9, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      54,   46,    9,    9, 0x0a,
+      46,    9,    9,    9, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GLWidget[] = {
     "GLWidget\0\0ix,iy\0inclineChanged(double,double)\0"
-    "initial\0switchLevel(QPoint)\0"
+    "switchLevel()\0"
 };
 
 const QMetaObject GLWidget::staticMetaObject = {
@@ -164,7 +163,7 @@ int GLWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: inclineChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
-        case 1: switchLevel((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
+        case 1: switchLevel(); break;
         default: ;
         }
         _id -= 2;

@@ -40,7 +40,7 @@ public slots:
     void createBall();
 signals:
     void collision(QVector3D normal);
-    void over(QPoint endPt);
+    void over();
 };
 
 class GLWidget : public QGLWidget
@@ -61,7 +61,7 @@ public:
     void mouseReleaseEvent(QMouseEvent *e);
     void keyPressEvent(QKeyEvent *e);
 public slots:
-        void switchLevel(QPoint initial);
+        void switchLevel();
 signals:
     void inclineChanged(double ix, double iy);
 
