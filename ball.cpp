@@ -65,6 +65,7 @@ void Ball::collisionFrom(QVector3D normal)
     if(! normals.contains(normal))
     {
         normals.append(normal);
+        velocity -= 2*QVector3D::dotProduct(velocity, normal)*(normal);
     }
 }
 

@@ -352,7 +352,7 @@ GLWidget :: GLWidget (QWidget *parent):
     connect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     connect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
-    connect(currentLevel, SIGNAL(over(QPoint)), this, SLOT(switchLevel(QPoint)));
+    connect(currentLevel, SIGNAL(over()), this, SLOT(switchLevel()));
 
     timer->start();
 }
@@ -439,7 +439,7 @@ void GLWidget::switchLevel()
 
     disconnect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     disconnect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
-    disconnect(currentLevel, SIGNAL(over(QPoint)), this, SLOT(switchLevel(QPoint)));
+    disconnect(currentLevel, SIGNAL(over()), this, SLOT(switchLevel()));
 
     currentLevel->getDestroyed();
     currentLevel = nextLevel;
@@ -450,7 +450,7 @@ void GLWidget::switchLevel()
 
     connect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     connect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
-    connect(currentLevel, SIGNAL(over(QPoint)), this, SLOT(switchLevel(QPoint)));
+    connect(currentLevel, SIGNAL(over()), this, SLOT(switchLevel()));
 
     qDebug()<<"switched";
     timer->start();

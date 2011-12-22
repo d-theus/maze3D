@@ -9,6 +9,7 @@
 #include "ball.h"
 #include "settings.h"
 
+
 class Level : public QObject
 {
     Q_OBJECT

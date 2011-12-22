@@ -20,6 +20,14 @@ HEADERS  += widget.h \
     settings.h \
     ball.h
 
+FORMS +=
+
+
+
+
+
+
+
 
 
 
