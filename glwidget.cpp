@@ -117,6 +117,7 @@ void Level::draw()
     static GLfloat clr_black[] = {0.0, 0.0, 0.0, 1.0};
     static GLfloat clr_wall[] = {0.3, 0.3, 0.4, 1.0};
     static GLfloat clr_plane[] = {0.9, 0.9, 0.9, 1.0};
+    static GLfloat clr_ball[] = {1.0, 0.0, 0.0, 1.0};
 
     clr_white[3] = 1.0 - transparency;
     clr_black[3] = 1.0 - transparency;
@@ -165,7 +166,7 @@ void Level::draw()
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_white);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_ball);
 
     if(ball != NULL)
         ball->draw();
@@ -407,18 +408,20 @@ void GLWidget:: paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
 
-    glPushMatrix();
-    glTranslatef(0.5,-0.5, -1);
+//    glPushMatrix();
+//    glTranslatef(0.5,-0.5, -1);
 
-    glBegin(GL_POINTS);
-    glVertex3d(0,0,0);
-    glEnd();
-
-    GLUquadric *gluq;
-    gluq = gluNewQuadric();
-    gluQuadricDrawStyle(gluq, GLU_FILL);
-    gluDisk(gluq, (float)90/HEIGHT, (float)92/HEIGHT, 50, 1);
-    glPopMatrix();
+//    glColor3d(1.0, 1.0, 1.0);
+//    glEnable(GL_COLOR_MATERIAL);
+//    glBegin(GL_POINTS);
+//    glVertex3d(0,0,0);
+//    glEnd();
+//    static GLUquadric *gluq;
+//    gluq = gluNewQuadric();
+//    gluQuadricDrawStyle(gluq, GLU_FILL);
+//    gluDisk(gluq, (float)90/HEIGHT, (float)92/HEIGHT, 50, 1);
+//    glPopMatrix();
+//    glDisable(GL_COLOR_MATERIAL);
 
     glPushMatrix();
     QVector3D cam = QVector3D(1.7*PLANE_HS,1.7*PLANE_HS,3*PLANE_HS);
@@ -459,27 +462,32 @@ void GLWidget::switchLevel()
 void GLWidget:: mousePressEvent(QMouseEvent *e)
 {
     mPressPos= QVector2D(e->pos().x(), e->pos().y());
-    mPressPos.setX(mPressPos.x()-480);
-    mPressPos.setY(mPressPos.y()-478);
-    if (mPressPos.length() < 65)
-    {
-        rotxAngle = floor(-mPressPos.y()/20);
-        rotyAngle = floor(-mPressPos.x()/20);
-        emit inclineChanged(rotxAngle, rotyAngle);
-    }
+
+        mPressPos.setX(mPressPos.x()-HEIGHT/2);
+        mPressPos.setY(mPressPos.y()-WIDTH/2);
+
+                rotxAngle = floor(-mPressPos.y()/100);
+                rotyAngle = floor(-mPressPos.x()/100);
+                emit inclineChanged(rotxAngle, rotyAngle);
+
+//    mPressPos.setX(mPressPos.x()-480);
+//    mPressPos.setY(mPressPos.y()-478);
+//    if (mPressPos.length() < 65)
+//    {
+//        rotxAngle = floor(-mPressPos.y()/20);
+//        rotyAngle = floor(-mPressPos.x()/20);
+//        emit inclineChanged(rotxAngle, rotyAngle);
+//    }
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *e)
 {
     mCurrPos= QVector2D(e->pos().x(), e->pos().y());
-    mCurrPos.setX(mCurrPos.x()-480);
-    mCurrPos.setY(mCurrPos.y()-478);
-    if (mCurrPos.length() < 65)
-    {
-        rotxAngle = floor(-mCurrPos.y()/20);
-        rotyAngle = floor(-mCurrPos.x()/20);
+    mCurrPos.setX(mCurrPos.x()-HEIGHT/2);
+    mCurrPos.setY(mCurrPos.y()-WIDTH/2);
+        rotxAngle = floor(-mCurrPos.y()/100);
+        rotyAngle = floor(-mCurrPos.x()/100);
         emit inclineChanged(rotxAngle, rotyAngle);
-    }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *e)

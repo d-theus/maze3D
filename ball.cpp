@@ -58,6 +58,14 @@ void Ball::updateCalculations()
 {
     calcVelocity();
     calcPosition();
+
+    static uint cnt = 0;
+    if (cnt == 10)
+    {
+        normals.clear();
+        cnt = 0;
+    }
+    cnt ++;
 }
 
 void Ball::collisionFrom(QVector3D normal)

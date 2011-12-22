@@ -6,11 +6,11 @@ Widget::Widget(QWidget *parent) :
     glWidget = new GLWidget;
     QGridLayout lyt;
     lbl.setText("Default text");
-    lbl.setGeometry(HEIGHT+40, 20, 100, 100);
+    lbl.setGeometry(WIDTH+50, 40 , 100, 100);
     lyt.addWidget(glWidget, 0,0, 2, 2, Qt::AlignLeft);
     lyt.addWidget(&lbl, 0, 5, 1, 1, Qt::AlignRight);
-    this->setGeometry(40, 40, 800, 600);
-    this->setFixedSize(800,600);
+    this->setGeometry(20, 20, WIDTH+200, HEIGHT+40);
+    this->setFixedSize(WIDTH+200, HEIGHT+40);
     this->setLayout(&lyt);
 
     connect(glWidget, SIGNAL(inclineChanged(double,double)), this, SLOT(inclineChanged(double,double)));

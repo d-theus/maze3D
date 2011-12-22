@@ -3,8 +3,8 @@
 
 #include <math.h>
 
-#define WIDTH 560
-#define HEIGHT 560
+#define WIDTH 670
+#define HEIGHT 670
 #define PLANE_HS 100.0 //“ут и далее HS = half of a side
 #define SIDE_LENGTH 20
 #define HS (float)PLANE_HS/SIDE_LENGTH
