@@ -1,7 +1,11 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'ball.h'
 **
+<<<<<<< HEAD
 ** Created: Fri 16. Dec 00:01:39 2011
+=======
+** Created: Mon 19. Dec 20:08:23 2011
+>>>>>>> 9baa3d663a4852b687027ee8e747c6f29d20823b
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

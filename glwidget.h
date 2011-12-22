@@ -9,7 +9,10 @@
 #include "ball.h"
 #include "settings.h"
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9baa3d663a4852b687027ee8e747c6f29d20823b
 class Level : public QObject
 {
     Q_OBJECT

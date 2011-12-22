@@ -58,6 +58,17 @@ void Ball::updateCalculations()
 {
     calcVelocity();
     calcPosition();
+<<<<<<< HEAD
+=======
+
+    static uint cnt = 0;
+    if (cnt == 10)
+    {
+        normals.clear();
+        cnt = 0;
+    }
+    cnt ++;
+>>>>>>> 9baa3d663a4852b687027ee8e747c6f29d20823b
 }
 
 void Ball::collisionFrom(QVector3D normal)
@@ -65,7 +76,10 @@ void Ball::collisionFrom(QVector3D normal)
     if(! normals.contains(normal))
     {
         normals.append(normal);
+<<<<<<< HEAD
         velocity -= 2*QVector3D::dotProduct(velocity, normal)*(normal);
+=======
+>>>>>>> 9baa3d663a4852b687027ee8e747c6f29d20823b
     }
 }
 
