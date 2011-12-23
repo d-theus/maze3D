@@ -20,18 +20,6 @@ HEADERS  += widget.h \
     settings.h \
     ball.h
 
-<<<<<<< HEAD
-FORMS +=
-
-
-
-
-
-
-
-=======
->>>>>>> 9baa3d663a4852b687027ee8e747c6f29d20823b
-
 
 
 
