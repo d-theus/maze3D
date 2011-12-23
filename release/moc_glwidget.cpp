@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'glwidget.h'
 **
-** Created: Thu 22. Dec 14:53:29 2011
+** Created: Fri 23. Dec 12:37:25 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -112,25 +112,28 @@ static const uint qt_meta_data_GLWidget[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
       16,   10,    9,    9, 0x05,
+      51,   46,    9,    9, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      46,    9,    9,    9, 0x0a,
+      71,    9,    9,    9, 0x0a,
+      85,    9,    9,    9, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GLWidget[] = {
     "GLWidget\0\0ix,iy\0inclineChanged(double,double)\0"
-    "switchLevel()\0"
+    "time\0timeChanged(double)\0switchLevel()\0"
+    "incTime()\0"
 };
 
 const QMetaObject GLWidget::staticMetaObject = {
@@ -163,10 +166,12 @@ int GLWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: inclineChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
-        case 1: switchLevel(); break;
+        case 1: timeChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 2: switchLevel(); break;
+        case 3: incTime(); break;
         default: ;
         }
-        _id -= 2;
+        _id -= 4;
     }
     return _id;
 }
@@ -176,5 +181,12 @@ void GLWidget::inclineChanged(double _t1, double _t2)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void GLWidget::timeChanged(double _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_END_MOC_NAMESPACE

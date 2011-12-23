@@ -13,7 +13,6 @@ class Level : public QObject
 {
     Q_OBJECT
     GLubyte difficulty, map[SIDE_LENGTH][SIDE_LENGTH];
-    uint num;
     bool isActive;
     QPoint startPoint, *endPoint;
     Ball *ball;
@@ -46,7 +45,7 @@ signals:
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
-    GLdouble rotxAngle, rotyAngle,camRotzAngle;
+    GLdouble rotxAngle, rotyAngle,camRotzAngle, curLvlTime;
     QVector2D mPressPos, mCurrPos;
     QTimer *timer;
     Level  *currentLevel, *nextLevel;
@@ -62,9 +61,10 @@ public:
     void keyPressEvent(QKeyEvent *e);
 public slots:
         void switchLevel();
+        void incTime();
 signals:
     void inclineChanged(double ix, double iy);
-
+    void timeChanged(double time);
 public slots:
 
 };

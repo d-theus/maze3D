@@ -112,11 +112,20 @@ void Level::draw()
                                         0.0, 0.0, 1.0,
                                         0.0, 0.0, 1.0
                                    };
+
+    static GLfloat a_vertices[6][3] = { zPos+HS, zPos+HS, zPos+6*HS,
+                                        zPos+HS, zPos-HS, zPos+6*HS,
+                                        zPos-HS, zPos-HS, zPos+6*HS,
+                                        zPos-HS, zPos+HS, zPos+6*HS,
+                                        0, 0,zPos+10*HS,
+                                        0, 0 ,zPos+2*HS
+                                        };
     static GLfloat clr_white[] = {1.0, 1.0, 1.0, 1.0};
     static GLfloat clr_black[] = {0.0, 0.0, 0.0, 1.0};
     static GLfloat clr_wall[] = {0.3, 0.3, 0.4, 1.0};
     static GLfloat clr_plane[] = {0.9, 0.9, 0.9, 1.0};
     static GLfloat clr_ball[] = {1.0, 0.0, 0.0, 1.0};
+    static GLfloat clr_arrow[] = {0.0, 1.0, 0.0, 1.0};
 
     clr_white[3] = 1.0 - transparency;
     clr_black[3] = 1.0 - transparency;
@@ -134,10 +143,14 @@ void Level::draw()
     glVertexPointer(3, GL_FLOAT, 0, &vertices);
     glNormalPointer(GL_FLOAT, 0, &normals);
 
+
     glPushMatrix();
     glTranslatef(0,0,zPos);
     glDrawArrays(GL_QUADS, 0, 4);
     glPopMatrix();
+
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_wall);
     for(GLubyte x = 0; x < SIDE_LENGTH; x++)
@@ -146,8 +159,9 @@ void Level::draw()
             if(map[x][y] == 1)
                 drawCube(x,y);
             else
-                if (map[x][y] == 2)
+                if (map[x][y] == 2 && isActive) //end point
                 {
+                    glEnableClientState(GL_VERTEX_ARRAY);
                     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_black);
                     glPushMatrix();
                     glTranslatef(-PLANE_HS+HS+x*2*HS, -PLANE_HS+HS+y*2*HS, 0);
@@ -158,12 +172,40 @@ void Level::draw()
                     glVertex3f(HS,HS,zPos+0.5);
                     glVertex3f(-HS,HS,zPos+0.5);
                     glEnd();
+
+                    glVertexPointer(3, GL_FLOAT, 0, &a_vertices);
+                    glMaterialfv(GL_FRONT, GL_EMISSION, clr_arrow);
+
+                    glBegin(GL_LINE_LOOP);
+                    glArrayElement(0);
+                    glArrayElement(1);
+                    glArrayElement(2);
+                    glArrayElement(3);
+                    glEnd();
+
+                    glBegin(GL_LINE_STRIP);
+                    glArrayElement(0);
+                    glArrayElement(5);
+                    glArrayElement(2);
+                    glEnd();
+
+                    glBegin(GL_LINE_STRIP);
+                    glArrayElement(1);
+                    glArrayElement(5);
+                    glArrayElement(3);
+                    glEnd();
+
+                    glBegin(GL_LINE_STRIP);
+                    glArrayElement(4);
+                    glArrayElement(5);
+                    glEnd();
+
                     glPopMatrix();
+                    glDisableClientState(GL_VERTEX_ARRAY);
+                    glMaterialfv(GL_FRONT, GL_EMISSION, clr_black);
                     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_wall);
                 }
         }
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
 
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_white);
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, clr_ball);
@@ -369,6 +411,7 @@ GLWidget :: GLWidget (QWidget *parent):
     connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     connect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));
     connect(currentLevel, SIGNAL(over()), this, SLOT(switchLevel()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(incTime()));
 
     timer->start();
 }
@@ -413,7 +456,7 @@ void GLWidget :: initializeGL()
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glLineWidth(5);
+    glLineWidth(2);
     glPointSize(10);
 }
 
@@ -434,11 +477,17 @@ void GLWidget:: paintGL()
     glPopMatrix();
 }
 
+void GLWidget::incTime()
+{
+    curLvlTime += (float)1/(2*TIMER_INTERVAL);
+    emit timeChanged(curLvlTime);
+}
 
 void GLWidget::switchLevel()
 {
     qDebug()<<"switching levels";
     timer->stop();
+    curLvlTime = 0;
 
     disconnect(timer, SIGNAL(timeout()), currentLevel, SLOT(update()));
     disconnect(this, SIGNAL(inclineChanged(double,double)), currentLevel, SLOT(inclineChanged(double,double)));

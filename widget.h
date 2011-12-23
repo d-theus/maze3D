@@ -8,7 +8,9 @@
 class Widget : public QWidget
 {
     Q_OBJECT
-    QLabel lbl;
+    QLabel lbl,lbl_time, lbl_incline;
+    QLCDNumber lcd_time;
+    uint time;
     GLWidget *glWidget;
 public:
     Widget(QWidget *parent = 0);
@@ -16,6 +18,7 @@ public:
     void keyPressEvent(QKeyEvent *e);
 public slots:
     void inclineChanged(double ix, double iy);
+    void inc_time(double);
 private:
 };
 
